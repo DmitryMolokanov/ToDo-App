@@ -1,30 +1,35 @@
 import React from "react";
 import ModalForm from "./ModalForm";
 import "../Modal/modal.css";
+import { useDispatch, useSelector } from "react-redux";
 
-function Modal(props) {
+function Modal() {
+  const isModal = useSelector((state) => state.isModal);
+  const dispatch = useDispatch();
+
   function closeModal() {
-    props.stateModal.setIsModal(false);
-    props.taskData.setTaskData(false);
+    dispatch({ type: "MODAL", payload: false });
+    dispatch({ type: "GET_DATA", payload: false });
   }
 
   return (
     <div
       className="modal"
-      style={
-        props.stateModal.isModal ? { display: "block" } : { display: "none" }
-      }
+      style={isModal ? { display: "block" } : { display: "none" }}
+      onClick={() => {
+        dispatch({ type: "MODAL", payload: false });
+      }}
     >
-      <div className="modal-content">
+      <div
+        className="modal-content"
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+      >
         <button className="close-modal-btn" onClick={closeModal}>
           X
         </button>
-        <ModalForm
-          stateModal={props.stateModal}
-          getTask={props.getTask}
-          taskData={props.taskData}
-          changeTask={props.changeTask}
-        />
+        <ModalForm />
       </div>
     </div>
   );

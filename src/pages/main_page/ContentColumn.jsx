@@ -3,8 +3,10 @@ import TaskBtn from "./TaskBtn";
 import TaskTime from "./TaskTime";
 import getStyle from "../../utils/utils-function/getStyle";
 import TaskSubtask from "./TaskSubtask";
+import { useDispatch } from "react-redux";
 
 function ContentColumn({ children, ...props }) {
+  const dispatch = useDispatch();
   const [showMore, setShowMore] = useState(true);
   const [isTasks, setIsTasks] = useState(false);
 
@@ -16,6 +18,16 @@ function ContentColumn({ children, ...props }) {
       task.show_more = showMore;
       setShowMore((show) => !show);
     }
+  }
+
+  function delTask(task) {
+    dispatch({ type: "DEL_TASK", payload: task.id });
+  }
+
+  function changeTask(task) {
+    dispatch({ type: "MODAL", payload: true });
+    dispatch({ type: "IS_CHANGE", payload: true });
+    dispatch({ type: "GET_DATA", payload: task });
   }
 
   function dragStartHandler(e, task) {
@@ -32,7 +44,7 @@ function ContentColumn({ children, ...props }) {
     const dragData = JSON.parse(e.dataTransfer.getData("text/plain"));
     if (e.target.id === "") return;
     dragData.stage = e.target.id;
-    props.changeStage(dragData);
+    dispatch({ type: "CHANGE_TASK", payload: dragData });
   }
 
   useEffect(() => {
@@ -70,19 +82,21 @@ function ContentColumn({ children, ...props }) {
                 </div>
                 <div className="task-discription-conteiner">
                   <div className="task-discription">
-                    <label className="task-inner-title">Discription:</label>
+                    <span className="task-inner-title">Discription:</span>
                     <span className="discription">{task.discription}</span>
                   </div>
                   <div className="task-btn">
                     <TaskBtn
-                      handler={props.getTaskData}
+                      handler={changeTask}
                       task={task}
                       img={"pencil.png"}
+                      id={"task-change-btn"}
                     />
                     <TaskBtn
-                      handler={props.delTask}
+                      handler={delTask}
                       task={task}
                       img={"trash.png"}
+                      id={"task-del-btn"}
                     />
                   </div>
                 </div>

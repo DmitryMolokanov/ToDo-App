@@ -9,16 +9,20 @@ import ModalSelectContainer from "./ModalSelectContainer";
 import ModalButton from "./ModalButton";
 import AddSubTask from "./AddSubTask";
 import ModalSubtaskLi from "./ModalSubtaskLi";
+import { useDispatch, useSelector } from "react-redux";
 
-function ModalForm(props) {
+function ModalForm() {
   const [valid, setValid] = useState(true);
-  const [isChange, setIsChange] = useState(false);
   const [addSubTask, setAddSubTask] = useState(false);
   const [title, setTitle] = useState("");
   const [discription, setDiscription] = useState("");
   const [subTask, setSubTask] = useState([]);
   const [priority, setPrioroty] = useState("high");
   const [stage, setStage] = useState("queue");
+
+  const dispatch = useDispatch();
+  const isChange = useSelector((state) => state.isChange);
+  const taskData = useSelector((state) => state.taskData);
 
   const newTask = {
     id: getUniqId(),
@@ -37,13 +41,13 @@ function ModalForm(props) {
       setValid(false);
       return;
     }
-    props.getTask(newTask);
+    dispatch({ type: "ADD_TASK", payload: newTask });
     setValid(true);
-    props.stateModal.setIsModal(false);
     setTitle("");
     setDiscription("");
-    setSubTask(subTask);
+    setSubTask([]);
     setAddSubTask(false);
+    dispatch({ type: "MODAL", payload: false });
   }
 
   function openSubTaskInput(e) {
@@ -57,34 +61,35 @@ function ModalForm(props) {
 
   function changeTask(e) {
     e.preventDefault();
-    const propsTaskData = props.taskData.taskData;
-    propsTaskData.title = title;
-    propsTaskData.discription = discription;
-    propsTaskData.priority = priority;
-    propsTaskData.stage = stage;
-    propsTaskData.subtask = subTask;
-    props.changeTask(propsTaskData);
-    props.taskData.setTaskData(false);
+    const newTaskData = taskData;
+    newTaskData.title = title;
+    newTaskData.discription = discription;
+    newTaskData.priority = priority;
+    newTaskData.stage = stage;
+    newTaskData.subtask = subTask;
+    setAddSubTask(false);
+    dispatch({ type: "CHANGE_TASK", payload: newTaskData });
+    dispatch({ type: "GET_DATA", payload: false });
+    dispatch({ type: "MODAL", payload: false });
   }
 
   useEffect(() => {
-    if (props.taskData.taskData) {
-      props.stateModal.setIsModal(true);
-      setIsChange(true);
-      setTitle(props.taskData.taskData.title);
-      setDiscription(props.taskData.taskData.discription);
-      setSubTask(props.taskData.taskData.subtask);
-      setPrioroty(props.taskData.taskData.priority);
-      setStage(props.taskData.taskData.stage);
+    if (taskData) {
+      setTitle(taskData.title);
+      setDiscription(taskData.discription);
+      setSubTask(taskData.subtask);
+      setPrioroty(taskData.priority);
+      setStage(taskData.stage);
+      setAddSubTask(false);
     } else {
       setTitle("");
       setDiscription("");
       setSubTask([]);
       setPrioroty("high");
       setStage("queue");
-      setIsChange(false);
+      setAddSubTask(false);
     }
-  }, [props.taskData.taskData, props.stateModal]);
+  }, [taskData]);
 
   return (
     <form className="modal-form">

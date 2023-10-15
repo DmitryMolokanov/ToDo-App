@@ -13,8 +13,8 @@ function ModalSubtaskLi(props) {
       <ol>
         {props.subTask.map((subtask) => {
           return (
-            <li key={subtask} className="subtask-li">
-              {subtask}
+            <li key={subtask.task} className="subtask-li">
+              {subtask.task}
               <button
                 className="subtask-btn"
                 onClick={(e) => {

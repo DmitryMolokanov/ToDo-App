@@ -49,37 +49,18 @@ function Content(props) {
 
   return isTasks ? (
     <div className="content-container">
-      <ContentColumn
-        id={"queue"}
-        tasks={queueTasks}
-        delTask={props.delTask}
-        stateModal={props.stateModal}
-        getTaskData={props.getTaskData}
-        changeStage={props.changeStage}
-      >
+      <ContentColumn id={"queue"} tasks={queueTasks}>
         Queue
       </ContentColumn>
 
       <ContentColumn
         id={"development"}
         tasks={develTasks}
-        delTask={props.delTask}
-        stateModal={props.stateModal}
-        getTaskData={props.getTaskData}
-        changeStage={props.changeStage}
         color={"lightskyblue"}
       >
         Development
       </ContentColumn>
-      <ContentColumn
-        id={"done"}
-        tasks={doneTask}
-        delTask={props.delTask}
-        stateModal={props.stateModal}
-        getTaskData={props.getTaskData}
-        changeStage={props.changeStage}
-        color={"lightgreen"}
-      >
+      <ContentColumn id={"done"} tasks={doneTask} color={"lightgreen"}>
         Done
       </ContentColumn>
     </div>

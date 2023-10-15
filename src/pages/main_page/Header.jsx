@@ -1,5 +1,5 @@
 import React from "react";
-import Button from "../../components/UI/Button";
+import Button from "./Button";
 
 function Header(props) {
   return (
@@ -7,7 +7,7 @@ function Header(props) {
       <a href="/" className="to-do-button">
         ToDo
       </a>
-      <Button setIsModal={props.setIsModal}>Create task</Button>
+      <Button>Create task</Button>
     </div>
   );
 }

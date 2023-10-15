@@ -1,11 +1,17 @@
 import React, { useState } from "react";
+import validationForm from "../../utils/utils-function/validationForm";
 
 function AddSubTask(props) {
   const [subTask, setSubTask] = useState("");
 
+  const newSubtask = {
+    task: subTask,
+    cross_out: false,
+  };
   function addSubTask(e) {
     e.preventDefault();
-    props.getSubTask(subTask);
+    if (!validationForm(newSubtask)) return;
+    props.getSubTask(newSubtask);
     setSubTask("");
   }
 
